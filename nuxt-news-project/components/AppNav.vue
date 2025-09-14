@@ -1,14 +1,16 @@
 <template>
-    <div class="nav">
+    <nav class="nav">
         <ul class="nav__list">
             <li v-for="item in navItems" :key="item.idx" class="nav__list__item">{{ item.label }}</li>
         </ul>
-    </div>
+    </nav>
 </template>
 
 <script setup lang="ts">
+import type { Nav } from '~/types/nav';
 
-    const navItems = ref([
+
+    const navItems = ref<Nav[]>([
         {
             idx: 0,
             label: '일반시사',
