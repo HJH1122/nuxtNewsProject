@@ -1,22 +1,19 @@
 <template>
     <div class="page">
-        <CardUI />
-        <CardUI />
-        <CardUI />
-        <CardUI />
-        <CardUI />
-        <CardUI />
-        <CardUI />
-        <CardUI />
-        <CardUI />
-        <CardUI />
+        <CardComponent v-for="article in data?.articles" :key="article.url" :data="article" />
+
     </div>
 </template>
 
 <script setup lang="ts">
-import CardUI from './components/Card.vue';
+import type { ApiStructure } from '~/types/api';
+import CardComponent from './components/Card.vue';
 
+const API_KEY = "ce4c280c9dff4ac0a98c9d7ea869194d";
+const API_URL = `https://newsapi.org/v2/everything?q=Apple&from=2025-09-10&sortBy=popularity&apiKey=${API_KEY}`;
+const {data, pending, error, refresh} = await useAsyncData<ApiStructure>("getNews", ()=> $fetch(API_URL));
 
+console.log(data.value);
 </script>
 
 <style lang="scss" scoped>
