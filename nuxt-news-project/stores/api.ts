@@ -1,51 +1,46 @@
 import { defineStore } from "pinia";
+import axios from "axios";
+import type {Article} from "~/types/api";
 
-// Setup Stores
-export const useStore = defineStore('counter', () => {
-    const count = ref<number>(10);
-    const name = ref<string>('hjh');
+export const useStore = defineStore("store", ()=>{
+    // State
+    const searchValue = ref<string>("korea");
+    const articleList = ref<Article[]>([]);
 
-    const doubleCount = computed(()=>{
-        return count.value * 2;
-    });
+    //Actions
+    //Mutations => State를 변경할 목적으로 작성된 코드
+    const changeSearchValue = async (payload: string) =>{
+        searchValue.value = payload;
+        await getNews();
+    };
 
-    const doublePlusOne = computed(()=>{
-        return count.value * 3;
-    });
+    //News API 호출
+    const getNews = async() =>{
+        const API_KEY = "ce4c280c9dff4ac0a98c9d7ea869194d";
+        const API_URL = `https://newsapi.org/v2/everything?q=${searchValue.value}&from=2025-09-01&sortBy=popularity&apiKey=${API_KEY}`;
+    
+        try{
+            articleList.value = await axios.get(API_URL).then((res) =>{
+                return res.data.articles;
+            });
 
-    function increment(){
-        count.value++;
+        }catch(error){
+            console.log(error);
+        }
     }
 
-    function randomizeCounter(){
-        count.value = Math.round(100 * Math.random());
-    }
-
-    return {count, name, doubleCount, doublePlusOne, increment, randomizeCounter};
-
+    return { searchValue, articleList, changeSearchValue, getNews};
 });
 
 
-// Option Stores
-// export const useStore = defineStore('storeId', {
-//     state:()=>({
-        
-//         count: 10,
-//         name: 'hjh',
-//     }),
-//     getters:{
-//         doubleCount: (state) => state.count * 2,
-//         doublePlusOne(): number {
-//             return this.count * 3;
-//         },
-//     },
-//     actions:{
-//         increment(){
-//             this.count++;
-//         },
-//         randomizeCounter(){
-//             this.count = Math.round(100 * Math.random());
-//         }
-//     },
 
-// });
+
+
+
+
+
+
+
+
+
+
